@@ -1,0 +1,47 @@
+#include <bits/stdc++.h>
+#define int long long
+using namespace std;
+
+const int p = 31;
+const int mod = 1e9 + 9;
+int n;
+int pss[100000];
+
+vector<int> pref, suff;
+
+
+void pz()
+{
+    pss[0] = 1;
+    for(int i = 1; i < 100000; i++)
+        pss[i] = (pss[i - 1] * p) % mod;
+}
+
+vector<int> _hash(vector<int> s)
+{
+    vector<int> ps(s.size());
+    for(int i = 0; i < s.size(); i++)
+    {
+        ps[i] = (pss[i] * s[i]) % mod;
+        if(i) ps[i] += ps[i - 1] % mod;
+        ps[i] %= mod;
+    }
+
+    return ps;
+}
+
+
+bool ISpalindrome(int l, int r)
+{
+    int h1 = 0;
+    int h2 = 0;
+    if(l > 0)
+        h1 = (pref[r] - pref[l - 1] + mod) % mod;
+    else
+        h1 = pref[r];
+    if(r < n - 1)
+        h2 = (suff[n - l - 1] - suff[n - r - 2] + mod) % mod;
+    else
+        h2 = suff[n - l - 1];
+    return (h2 * pss[l]) % mod == (h1 * pss[n - r - 1]) % mod;
+}
