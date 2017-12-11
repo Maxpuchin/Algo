@@ -8,7 +8,8 @@ using namespace std;
 struct node
 {
     int x, y;
-    node* l, r;
+    node* l;
+    node* r;
     int s = 1;
     node (int _x)
     {
@@ -31,12 +32,12 @@ node* merge_(node* p, node* v)
         return p;
     if(p->y > v->y)
     {
-        p->r = merge(p->r, v);
+        p->r = merge_(p->r, v);
         return p;
     }
     else
     {
-        v->l = merge(p, v->l);
+        v->l = merge_(p, v->l);
         return v;
     }
 }
@@ -44,18 +45,18 @@ node* merge_(node* p, node* v)
 Pair split(node* p, int k)
 {
     if(p == NULL)
-        return {NULL, NULL};
+        return pair<node*, node*>(NULL, NULL);
     if(p->x < k)
     {
         Pair m = split(p->r, k);
         p->r = m.first;
-        return {p, m.second};
+        return pair<node*, node*>(p, m.second);
     }
     else
     {
         Pair m = split(p->l, k);
         p->l = m.second;
-        return {m.first, p};
+        return pair<node*, node*> (m.first, p);
     }
 
 }
@@ -75,9 +76,11 @@ node* Insert(node* p, node* k)
 
 node* Min(node* p)
 {
+	if(p == NULL)
+		return NULL;
 	if(p->l == NULL)
 		return p;
-	Min(p->l);
+	return Min(p->l);
 }
 
 node* Find(node* p, int k)
@@ -86,7 +89,3 @@ node* Find(node* p, int k)
 	return Min(m.second);
 }
 
-signed main()
-{
-    return 0;
-}
