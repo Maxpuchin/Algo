@@ -1,0 +1,13 @@
+vector<vector<int> > g(MAX_N);
+
+int used[MAX_N][MAX_N];
+
+void dfs(int v)
+{
+    for(int i = 0; i < g[v].size(); i++)
+    {
+        to = g[v][i];
+        if(!used[to])
+            dfs(to);
+    }
+}
