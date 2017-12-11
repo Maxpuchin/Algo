@@ -1,0 +1,92 @@
+#include <bits/stdc++.h>
+#define int long long
+#define Pair pair<node*, node*>
+#define fisrt first
+
+using namespace std;
+
+struct node
+{
+    int x, y;
+    node* l, r;
+    int s = 1;
+    node (int _x)
+    {
+        y = rand();
+        x = _x;
+        l = NULL;
+        r = NULL;
+    }
+};
+
+int size_(node* p) { return p == NULL ? 0 : p->s; }
+
+void upd(node* p) { p->s = 1 + size_(p->l) + size_(p->r); }
+
+node* merge_(node* p, node* v)
+{
+    if(p == NULL)
+        return v;
+    if(v == NULL)
+        return p;
+    if(p->y > v->y)
+    {
+        p->r = merge(p->r, v);
+        return p;
+    }
+    else
+    {
+        v->l = merge(p, v->l);
+        return v;
+    }
+}
+
+Pair split(node* p, int k)
+{
+    if(p == NULL)
+        return {NULL, NULL};
+    if(p->x < k)
+    {
+        Pair m = split(p->r, k);
+        p->r = m.first;
+        return {p, m.second};
+    }
+    else
+    {
+        Pair m = split(p->l, k);
+        p->l = m.second;
+        return {m.first, p};
+    }
+
+}
+
+node* Insert(node* p, node* k)
+{
+    Pair m = split(p, k->x);
+    m.first = merge_(m.first, k);
+    return merge_(m.first, m.second);
+}
+
+/*node* Remove(node* p, int k)
+{
+    Pair m = split(p, k);
+
+}*/
+
+node* Min(node* p)
+{
+	if(p->l == NULL)
+		return p;
+	Min(p->l);
+}
+
+node* Find(node* p, int k)
+{
+	Pair m = split(p, k);
+	return Min(m.second);
+}
+
+signed main()
+{
+    return 0;
+}
