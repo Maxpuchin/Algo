@@ -86,6 +86,8 @@ node* Min(node* p)
 node* Find(node* p, int k)
 {
 	Pair m = split(p, k);
-	return Min(m.second);
+	node* u = Min(m.second);
+	p = merge_(m.first, m.second);
+	return u;
 }
 
