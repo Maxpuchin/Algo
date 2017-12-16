@@ -1,0 +1,80 @@
+#include <bits/stdc++.h>
+#define int long long
+#define Pair pair<node*, node*>
+#define fisrt first
+
+using namespace std;
+
+struct node
+{
+    int x, y;
+    node* l;
+    node* r;
+    int s = 1;
+    node (int x_)
+    {
+        x = x_;
+        y = rand();
+        l = NULL;
+        r = NULL;
+    }
+};
+
+int size_(node* p) { return p == NULL ? 0 : p->s; }
+
+void upd(node* p) { p->s = 1 + size_(p->l) + size_(p->r); }
+
+node* merge_(node* p, node* v)
+{
+    if(p == NULL)
+        return v;
+    if(v == NULL)
+        return p;
+    if(p->y > v->y)
+    {
+        p->r = merge_(p->r, v);
+        upd(p);
+        return p;
+    }
+    else
+    {
+        v->l = merge_(p, v->l);
+        upd(p);
+        return v;
+    }
+}
+
+Pair split(node* p, int k)
+{
+    if(p == NULL)
+        return pair<node*, node*>(NULL, NULL);
+    int key = p->l->s;
+    if(p->x < k)
+    {
+        Pair m = split(p->r, k - key - 1);
+        p->r = m.first;
+        upd(p);
+        return pair<node*, node*>(p, m.second);
+    }
+    else
+    {
+        Pair m = split(p->l, k);
+        p->l = m.second;
+        upd(p);
+        return pair<node*, node*> (m.first, p);
+    }
+
+}
+
+node* Insert(node* p, int x)
+{
+    Pair m = split(p, x);
+    node* t = new node(x);
+    m.first = merge_(m.first, t);
+    return merge_(m.first, m.second);
+}
+
+node* sdvig(node* p, node* l, node* r, int k)
+{
+    Pair m =
+}
