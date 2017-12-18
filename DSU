@@ -1,0 +1,27 @@
+vector<int> p(max_n);
+vector<int> rank(max_n);
+
+int dsu_find_set(int v)
+{
+	return (v == p[v]) ? v : (p[v] = dsu_find_set(p[v]));
+}
+
+void dsu_make_set(int v)
+{
+	parent[v] = v;
+	rank[v] = 0;
+}
+
+void dsu_unite_sets(int a, int b)
+{
+	a = dsu_find_set(a);
+	b = dsu_find_set(b);
+	if(a != b)
+	{
+		if(rank[a] < rank[b])
+			swap(a, b);
+		parent[b] = a;
+		if(rank[a] == rank[b])
+			rank[a]++;
+	}
+}
