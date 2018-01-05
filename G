@@ -1,0 +1,96 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int binary_search(set<pair<int, int> > g, int v)
+{
+    int l = 0;
+    int r = g.size() - 1;
+    while(r - l > 1)
+    {
+        int m = (r + l) / 2;
+        if(*(g.begin() + m).first > v)
+            r = m;
+        else
+            l = m;
+    }
+    if((g.begin() + r).first == v)
+        return r;
+    else
+        return -1;
+}
+
+int main()
+{
+    int n, m;
+    cin >> n >> m;
+    vector<vector<pair<int, int> > > g(n);
+    for(int i = 0; i < m; i++)
+    {
+        int v, u, c;
+        cin >> v >> u >> c;
+        v--, u--;
+        g[v].push_back({u, c});
+        g[u].push_back({v, c});
+    }
+    int q;
+    cin >> q;
+    for(int i = 0; i < q; i++)
+    {
+        int ch;
+        cin >> ch;
+        if(ch == 1)
+        {
+            int v, u, c;
+            cin >> v >> u >> c;
+            v--, u--;
+            g[v].push_back({u, c});
+            g[u].push_back({v, c});
+        }
+        else if(ch == 2)
+        {
+            int v, u;
+            cin >> v >> u;
+            v--, u--;
+            for(int j = 0; j < g[v].size(); j++)
+                if(g[v][j].first == u)
+                    g[v].erase(g[v].begin() + j);
+            for(int j = 0; j < g[u].size(); j++)
+                if(g[u][j].first == v)
+                    g[u].erase(g[u].begin() + j);
+        }
+        else if(ch == 3)
+        {
+            int v, u;
+            cin >> v >> u;
+            v--, u--;
+            set<int> prices;
+            for(int j = 0; j < g[v].size(); j++)
+            {
+                if(g[v][j].first == u)
+                    prices.insert(g[v][j].second);
+                for(int k = 0; k < g[g[v][j].first].size(); k++)
+                    if(g[g[v][j].first][k].first == u)
+                    {
+                        prices.insert(g[g[v][j].first][k].second + g[v][j].second);
+                        //cout << v + 1 << " " << g[v][j].first + 1 << " " << g[g[v][j].first][k].first + 1 << endl;
+                    }
+            }
+            for(int j = 0; j < g[u].size(); j++)
+            {
+                if(g[u][j].first == v)
+                    prices.insert(g[u][j].second);
+                for(int k = 0; k < g[g[u][j].first].size(); k++)
+                    if(g[g[u][j].first][k].first == v)
+                    {
+                        prices.insert(g[g[u][j].first][k].second + g[u][j].second);
+                        //cout << u + 1 << " " << g[u][j].first + 1 << " " << g[g[u][j].first][k].first + 1 << endl;
+                    }
+            }
+            if(prices.size() == 0)
+                cout << -1 << endl;
+            else
+                cout << *min_element(prices.begin(), prices.end()) << endl;
+        }
+    }
+}
